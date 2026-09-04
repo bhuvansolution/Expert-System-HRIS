@@ -11,12 +11,24 @@ use App\Services\Competency\EmployeeCompetencyService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class EmployeeCompetencyController extends Controller
+class EmployeeCompetencyController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly EmployeeCompetencyService $employeeCompetencyService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:employee-competency.view', only: ['index', 'show']),
+            new Middleware('permission:employee-competency.create', only: ['store']),
+            new Middleware('permission:employee-competency.update', only: ['update']),
+            new Middleware('permission:employee-competency.delete', only: ['destroy']),
+        ];
+    }
 
     /**
      * Display a listing of the resource.

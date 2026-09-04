@@ -11,12 +11,24 @@ use App\Services\Competency\CompetencyLevelService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class CompetencyLevelController extends Controller
+class CompetencyLevelController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly CompetencyLevelService $competencyLevelService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:competency-level.view', only: ['index', 'show']),
+            new Middleware('permission:competency-level.create', only: ['store']),
+            new Middleware('permission:competency-level.update', only: ['update']),
+            new Middleware('permission:competency-level.delete', only: ['destroy']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */

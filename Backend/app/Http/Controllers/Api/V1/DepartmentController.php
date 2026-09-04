@@ -11,12 +11,25 @@ use App\Services\DepartmentService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class DepartmentController extends Controller
+class DepartmentController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly DepartmentService $departmentService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:department.view', only: ['index', 'show']),
+            new Middleware('permission:department.create', only: ['store']),
+            new Middleware('permission:department.update', only: ['update']),
+            new Middleware('permission:department.delete', only: ['destroy']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */

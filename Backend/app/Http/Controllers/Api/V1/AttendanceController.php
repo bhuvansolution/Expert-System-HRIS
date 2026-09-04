@@ -12,13 +12,25 @@ use App\Services\AttendanceService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class AttendanceController extends Controller
+class AttendanceController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly AttendanceService $attendanceService
     ) {}
 
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:attendance.clock_in', only: ['clockIn']),
+            new Middleware('permission:attendance.clock_out', only: ['clockOut']),
+            new Middleware('permission:attendance.view',  only: ['index', 'show']),
+            new Middleware('permission:attendance.view_all', only: ['recap']),
+            new Middleware('permission:attendance.report', only: ['report']),
+        ];
+    }
     /**
      * Clock in authenticated employee.
      */

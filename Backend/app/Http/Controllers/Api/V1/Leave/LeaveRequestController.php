@@ -14,12 +14,25 @@ use App\Services\Leave\LeaveRequestService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LeaveRequestController extends Controller
+class LeaveRequestController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly LeaveRequestService $leaveRequestService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:leave_request.view', only: ['me', 'index', 'show']),
+            new Middleware('permission:leave_request.create', only: ['store']),
+            new Middleware('permission:leave_request.approve', only: ['approve']),
+            new Middleware('permission:leave_request.reject', only: ['reject']),
+            new Middleware('permission:leave_request.cancel', only: ['cancel']),
+        ];
+    }
 
     public function index(LeaveRequestIndexRequest $request): JsonResponse
     {

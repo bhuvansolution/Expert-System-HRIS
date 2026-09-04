@@ -11,12 +11,22 @@ use App\Services\Leave\LeaveBalanceService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LeaveBalanceController extends Controller
+class LeaveBalanceController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly LeaveBalanceService $leaveBalanceService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:leave_balance.view', only: ['me']),
+            new Middleware('permission:leave_balance.view_all', only: ['index', 'employee']),
+        ];
+    }
 
     /**
      * Display a listing of the resource.

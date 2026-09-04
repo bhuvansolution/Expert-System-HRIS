@@ -11,12 +11,24 @@ use App\Models\Employee;
 use App\Services\EmployeeService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class EmployeeController extends Controller
+class EmployeeController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly EmployeeService $employeeService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:employee.view', only: ['index', 'show']),
+            new Middleware('permission:employee.create', only: ['store']),
+            new Middleware('permission:employee.update', only: ['update']),
+            new Middleware('permission:employee.delete', only: ['destroy']),
+        ];
+    }
 
     /**
      * Display a listing of the resource.

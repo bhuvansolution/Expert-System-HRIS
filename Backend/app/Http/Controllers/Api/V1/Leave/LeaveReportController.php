@@ -8,12 +8,21 @@ use App\Http\Resources\V1\Leave\LeaveReportResource;
 use App\Services\Leave\LeaveReportService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LeaveReportController extends Controller
+class LeaveReportController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly LeaveReportService $leaveReportService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:leave_report.view', only: ['index']),
+        ];
+    }
 
     public function index(
         LeaveReportIndexRequest $request

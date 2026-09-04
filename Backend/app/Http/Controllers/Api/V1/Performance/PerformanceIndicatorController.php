@@ -10,12 +10,24 @@ use App\Models\PerformanceIndicator;
 use App\Services\Performance\PerformanceIndicatorService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PerformanceIndicatorController extends Controller
+class PerformanceIndicatorController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly PerformanceIndicatorService $performanceIndicatorService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:performance_indicator.view', only: ['index', 'show', 'active']),
+            new Middleware('permission:performance_indicator.create', only: ['store']),
+            new Middleware('permission:performance_indicator.update', only: ['update']),
+            new Middleware('permission:performance_indicator.delete', only: ['destroy']),
+        ];
+    }
 
     public function index(): JsonResponse
     {

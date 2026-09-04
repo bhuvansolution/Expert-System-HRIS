@@ -9,12 +9,21 @@ use App\Services\Performance\PerformanceHistoryService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PerformanceHistoryController extends Controller
+class PerformanceHistoryController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly PerformanceHistoryService $performanceHistoryService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:performance_review.view', only: ['index', 'employee']),
+        ];
+    }
 
     public function index(
         Request $request

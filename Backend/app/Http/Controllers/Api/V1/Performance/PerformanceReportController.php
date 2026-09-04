@@ -8,12 +8,22 @@ use App\Http\Resources\V1\Performance\PerformanceReportResource;
 use App\Services\Performance\PerformanceReportService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PerformanceReportController extends Controller
+class PerformanceReportController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly PerformanceReportService $performanceReportService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:performance_report.view', only: ['index']),
+        ];
+    }
+
 
     public function index(
         PerformanceReportRequest $request

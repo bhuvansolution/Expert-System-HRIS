@@ -8,15 +8,27 @@ use App\Http\Requests\Leave\StoreLeaveTypeRequest;
 use App\Http\Requests\Leave\UpdateLeaveTypeRequest;
 use App\Http\Resources\V1\Leave\LeaveTypeResource;
 use App\Models\LeaveType;
-use App\Services\LeaveTypeService;
+use App\Services\Leave\LeaveTypeService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LeaveTypeController extends Controller
+class LeaveTypeController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly LeaveTypeService $leaveTypeService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:leave_type.view', only: ['index', 'show']),
+            new Middleware('permission:leave_type.create', only: ['store']),
+            new Middleware('permission:leave_type.update', only: ['update']),
+            new Middleware('permission:leave_type.delete', only: ['destroy']),
+        ];
+    }
 
     /**
      * Display a listing of the resource.

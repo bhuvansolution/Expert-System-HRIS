@@ -10,12 +10,24 @@ use App\Models\PerformancePeriod;
 use App\Services\Performance\PerformancePeriodService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PerformancePeriodController extends Controller
+class PerformancePeriodController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly PerformancePeriodService $performancePeriodService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:performance_period.view', only: ['index', 'show']),
+            new Middleware('permission:performance_period.create', only: ['store']),
+            new Middleware('permission:performance_period.update', only: ['update']),
+            new Middleware('permission:performance_period.delete', only: ['destroy']),
+        ];
+    }
 
     public function index(): JsonResponse
     {

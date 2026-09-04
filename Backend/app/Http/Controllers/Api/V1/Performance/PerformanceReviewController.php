@@ -12,12 +12,27 @@ use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PerformanceReviewController extends Controller
+class PerformanceReviewController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly PerformanceReviewService $performanceReviewService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:performance_review.view', only: ['index', 'show']),
+            new Middleware('permission:performance_review.create', only: ['store']),
+            new Middleware('permission:performance_review.update', only: ['update', 'calculate']),
+            new Middleware('permission:performance_review.submit', only: ['submit']),
+            new Middleware('permission:performance_review.approve', only: ['approve']),
+            new Middleware('permission:performance_review.reject', only: ['reject']),
+            new Middleware('permission:performance_review.delete', only: ['destroy']),
+        ];
+    }
 
     public function index(Request $request): JsonResponse
     {

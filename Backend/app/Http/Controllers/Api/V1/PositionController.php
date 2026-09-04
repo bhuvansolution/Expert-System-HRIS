@@ -11,12 +11,25 @@ use App\Services\PositionService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PositionController extends Controller
+class PositionController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly PositionService $positionService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:position.view', only: ['index', 'show']),
+            new Middleware('permission:position.create', only: ['store']),
+            new Middleware('permission:position.update', only: ['update']),
+            new Middleware('permission:position.delete', only: ['destroy']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */

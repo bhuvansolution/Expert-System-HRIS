@@ -10,12 +10,25 @@ use App\Services\RoleService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class RoleController extends Controller
+class RoleController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly RoleService $roleService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:role.view', only: ['index', 'show']),
+            new Middleware('permission:role.create', only: ['store']),
+            new Middleware('permission:role.update', only: ['update']),
+            new Middleware('permission:role.delete', only: ['destroy']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */

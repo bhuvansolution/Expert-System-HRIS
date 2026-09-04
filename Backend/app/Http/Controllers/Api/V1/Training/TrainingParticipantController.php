@@ -24,7 +24,7 @@ class TrainingParticipantController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:training.participant.view',   only: ['index', 'show']),
+            new Middleware('permission:training.participant.view',   only: ['index', 'show', 'history']),
             new Middleware('permission:training.participant.register',   only: ['store']),
             new Middleware('permission:training.participant.update',   only: ['update']),
             new Middleware('permission:training.participant.delete',    only: ['destroy']),

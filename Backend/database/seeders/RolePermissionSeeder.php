@@ -75,28 +75,28 @@ class RolePermissionSeeder extends Seeder
             'leave_report.view',
 
             // Performance Period
-            'performance-period.view',
-            'performance-period.create',
-            'performance-period.update',
-            'performance-period.delete',
+            'performance_period.view',
+            'performance_period.create',
+            'performance_period.update',
+            'performance_period.delete',
 
             // Performance Indicator
-            'performance-indicator.view',
-            'performance-indicator.create',
-            'performance-indicator.update',
-            'performance-indicator.delete',
+            'performance_indicator.view',
+            'performance_indicator.create',
+            'performance_indicator.update',
+            'performance_indicator.delete',
 
             // Performance Review
-            'performance-review.view',
-            'performance-review.create',
-            'performance-review.update',
-            'performance-review.delete',
-            'performance-review.submit',
-            'performance-review.approve',
-            'performance-review.reject',
+            'performance_review.view',
+            'performance_review.create',
+            'performance_review.update',
+            'performance_review.delete',
+            'performance_review.submit',
+            'performance_review.approve',
+            'performance_review.reject',
 
             // Performance Report
-            'performance-report.view',
+            'performance_report.view',
 
             // Competency
             'competency.view',

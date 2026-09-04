@@ -12,12 +12,23 @@ use App\Services\Performance\PerformanceReviewItemService;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class PerformanceReviewItemController extends Controller
+class PerformanceReviewItemController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly PerformanceReviewItemService $performanceReviewItemService,
     ) {}
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:performance_review.view', only: ['index', 'show']),
+            new Middleware('permission:performance_review.update', only: ['store', 'update']),
+            new Middleware('permission:performance_review.delete', only: ['destroy']),
+        ];
+    }
 
     public function index(
         PerformanceReview $performanceReview
