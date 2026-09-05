@@ -89,11 +89,17 @@ class PerformanceReviewItemService
                     'performance_indicator_id',
                     $indicator->id
                 )
-                ->whereKey('!=', $item->id)
+                ->where(
+                    'id',
+                    '!=',
+                    $item->id
+                )
                 ->exists();
 
             if ($exists) {
-                throw new InvalidArgumentException('Performance indicator tersebut sudah digunakan dalam review.');
+                throw new InvalidArgumentException(
+                    'Performance indicator tersebut sudah digunakan dalam review.'
+                );
             }
         }
 
